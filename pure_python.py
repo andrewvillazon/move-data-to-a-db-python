@@ -23,3 +23,14 @@ curs.execute(
 # Remove any data from a previous run
 curs.execute("DELETE FROM pure_python")
 conn.commit()
+
+# Read csv and INSERT each line
+with open("big_data.csv", "r", encoding="utf-8") as csv_file:
+    data_reader = csv.reader(csv_file, delimiter="|")
+    next(data_reader)  # skip over header row if it has column names
+
+    for row in data_reader:
+        curs.execute("INSERT INTO pure_python VALUES(?,?,?,?,?,?,?)", row)
+
+conn.commit()
+conn.close()
