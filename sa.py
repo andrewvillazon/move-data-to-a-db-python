@@ -1,5 +1,13 @@
+"""Move data to a database with SQLAlchemy
+
+Script demonstrating how to move data from a CSV file to a database
+using SQLAlchemy.
+
+"""
+
 import csv
 
+from dateutil.parser import parse
 from sqlalchemy import Column, Date, Float, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -11,6 +19,9 @@ Base = declarative_base()
 
 
 class Listing(Base):
+    """SQLAlchemy mapped class. Maps a Listing object to the corresponding
+    database table."""
+
     __tablename__ = "listings_sqlalchemy"
 
     id = Column(Integer, primary_key=True)
@@ -42,6 +53,8 @@ Session = sessionmaker(bind=engine)
 
 
 def parse_none(dt):
+    """Trys to parse a string date and returns None if unable to."""
+
     try:
         return parse(dt)
     except:
@@ -49,6 +62,8 @@ def parse_none(dt):
 
 
 def prepare_listing(row):
+    """Takes a row from CSV file and returns a Listing object from it."""
+
     row["last_review"] = parse_none(row["last_review"])
     return Listing(**row)
 
