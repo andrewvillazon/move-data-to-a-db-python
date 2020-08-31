@@ -10,7 +10,7 @@ import sqlalchemy
 
 
 df = pd.read_csv(
-    "AB_NYC_2019.csv",
+    filepath_or_buffer="AB_NYC_2019.csv",
     header=0,
     index_col="id",
     quotechar='"',
@@ -18,16 +18,18 @@ df = pd.read_csv(
 )
 
 # Optionally summarise df
+# print(df.shape)
 # print(df.info())
 # print(df.isnull().sum())
 
 engine = sqlalchemy.create_engine("sqlite:///ab_nyc.sqlite3")
 
-df.to_sql(
-    name="listings_pandas",
-    con=engine,
-    if_exists="replace",
-    index=True,
-    index_label="id",
-    dtype={"last_review": sqlalchemy.Date},
-)
+with engine.connect() as connection:
+    df.to_sql(
+        name="listings_pandas",
+        con=connection,
+        if_exists="replace",
+        index=True,
+        index_label="id",
+        dtype={"last_review": sqlalchemy.Date},
+    )
