@@ -27,5 +27,5 @@ pip install -r requirements.txt
 Run each script as required:
 
 ```shell
-python -m <filename>.py
+python -u <filename>.py
 ```
